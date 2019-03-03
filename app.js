@@ -1,43 +1,5 @@
 var ctx = document.getElementById("myChart").getContext('2d');
 
-// var myChart = new Chart(ctx, {
-//     type: 'bar',
-//     data: {
-//         labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-//         datasets: [{
-//             label: '# of Votes',
-//             data: [12, 19, 3, 5, 2, 3],
-//             backgroundColor: [
-//                 'rgba(255, 99, 132, 0.2)',
-//                 'rgba(54, 162, 235, 0.2)',
-//                 'rgba(255, 206, 86, 0.2)',
-//                 'rgba(75, 192, 192, 0.2)',
-//                 'rgba(153, 102, 255, 0.2)',
-//                 'rgba(255, 159, 64, 0.2)'
-//             ],
-//             borderColor: [
-//                 'rgba(255,99,132,1)',
-//                 'rgba(54, 162, 235, 1)',
-//                 'rgba(255, 206, 86, 1)',
-//                 'rgba(75, 192, 192, 1)',
-//                 'rgba(153, 102, 255, 1)',
-//                 'rgba(255, 159, 64, 1)'
-//             ],
-//             borderWidth: 1
-//         }]
-//     },
-//     options: {
-//         scales: {
-//             yAxes: [{
-//                 ticks: {
-//                     beginAtZero:true
-//                 }
-//             }]
-//         }
-//     }
-// });
-
-
 var bubbleData = {
 	datasets: [
 		{
@@ -92,18 +54,24 @@ var myChart = new Chart(ctx, {
 		datasets: [
 			{ 
 				data: [
-				{
-			        x: '1.0.1',
-			        y: 1
-			    }, {
-			        x: '1.0.2',
-			        y: 1
-			    }, {
-			        x: '1.0.3',
-			        y: 1
-			    }],
+					{
+				        x: '1.0.1',
+				        y: 1
+				    }, {
+				        x: '1.0.2',
+				        y: 1
+				    }, {
+				        x: '1.0.3',
+				        y: 1
+				    }
+			    ],
+
 				label: "BUG 1",
 				borderColor: "#3e95cd",
+				backgroundColor: "#3e95cd",
+				hoverBackgroundColor: "lightgreen",
+				radius: 6,
+				hoverRadius: 10,
 				fill: false
 			}, 
 
@@ -122,6 +90,9 @@ var myChart = new Chart(ctx, {
 			    ],
 				label: "BUG 2",
 				borderColor: "#8e5ea2",
+				backgroundColor: "#8e5ea2",
+				radius: 6,
+				hoverRadius: 10,
 				fill: false
 			},
 
@@ -143,6 +114,9 @@ var myChart = new Chart(ctx, {
 			    ],
 				label: "BUG 2",
 				borderColor: "#8e5ea2",
+				backgroundColor: "#8e5ea2",
+				radius: 6,
+				hoverRadius: 10,
 				fill: false
 			},
 			{ 
@@ -163,6 +137,9 @@ var myChart = new Chart(ctx, {
 			    ],
 				label: "BUG 3",
 				borderColor: "#ff0016",
+				backgroundColor: "#ff0016",
+				radius: 6,
+				hoverRadius: 10,
 				fill: false
 			}
 		]
@@ -212,13 +189,10 @@ var myChart = new Chart(ctx, {
 			    label: function(tooltipItem, data) {
 					var value = data.datasets[0].data[tooltipItem.index];
 
+					var message = "my string"
 
 					if(tooltipItem.index == 0) {
-						return `
-							that's my text
-
-							and this is too
-						`;
+						return message;
 					}
 					else if(tooltipItem.index == 1) {
 						return "<?php echo $data2;?>";
@@ -227,10 +201,32 @@ var myChart = new Chart(ctx, {
 						return "<?php echo $data3;?>";
 					}
 					else {
-						return "<?php echo $data4; ?>";
+						return message;
 					}
 			    },
 			}
 		}
 	}
 })
+
+
+
+
+function getDataFromServer () {
+
+	let data = {
+		message: 'Hello, Roman! Please, send me json data of your bugs... =)'
+	}
+
+	$.ajax({
+		type: "post",
+		url: "/api/getData", 
+		dataType: "json",
+		contentType: "application/json; charset=UTF-8",
+		data:  JSON.stringify(data,null, 2)
+	}).done(function ( data ) { 
+		
+		console.log(data)
+
+	});
+}
