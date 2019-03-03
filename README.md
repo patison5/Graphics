@@ -1,7 +1,3 @@
-# Graphics
-
-
-
 # Graphics alpha 0.0.0.1
 
 
