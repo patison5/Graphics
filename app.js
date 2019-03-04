@@ -97,19 +97,19 @@ var dataJSON = {
                 },
                 {
                     "name": "VM 7.0.0.6",
-                    "visible": false
+                    "visible": true
                 },
                 {
                     "name": "VM 7.0.0.15",
-                    "visible": false
+                    "visible": true
                 },
                 {
                     "name": "VM 7.0.0.24",
-                    "visible": false
+                    "visible": true
                 },
                 {
                     "name": "VM 8.8.8.8",
-                    "visible": false
+                    "visible": true
                 }
             ]
         },
@@ -7982,7 +7982,7 @@ function getDataFromServer () {
 	for (let i = 0; i < dataJSON.BigData.length; i++) {
 
 		var data = [];
-		let _isCreating = true;
+        var color = getRandomColor();
 
 		for (let j = 0; j < dataJSON.BigData[i].versions.length; j++) {
 
@@ -7991,29 +7991,25 @@ function getDataFromServer () {
 					x: dataJSON.BigData[i].versions[j].name,
 					y: dataJSON.BigData[i].id
 				})
-			}
-
-			else {
-				if (data.length > 0) {
-
-					var color = getRandomColor();
-
-					resultMass.push({
-						data: data,
-
-						label: dataJSON.BigData[i].bugName,
-						borderColor: color,
-						backgroundColor: color,
-						hoverBackgroundColor: color,
-						radius: 6,
-						hoverRadius: 10,
-						fill: false
-					})
-
-					data = [];
-				}
+			} else {
+				data.push({
+                    x: null,
+                    y: null
+                })
 			}
 		}
+
+        resultMass.push({
+            data: data,
+
+            label: dataJSON.BigData[i].bugName,
+            borderColor: color,
+            backgroundColor: color,
+            hoverBackgroundColor: color,
+            radius: 6,
+            hoverRadius: 10,
+            fill: false
+        })
 	}
 
 
@@ -8060,8 +8056,6 @@ function getDataFromServer () {
 			    label: function(tooltipItem, data) {
 					var value = data.datasets[0].data[tooltipItem.index];
 
-
-
 					var message = "my string";
 
 					if(tooltipItem.index == 0) {
@@ -8079,8 +8073,8 @@ function getDataFromServer () {
 			    },
 			     title: function(tooltipItems, data) {
 		            //Return value for title
-		            // tooltipItems[0].xLabel
-		            return '';
+		            
+		            return tooltipItems[0].xLabel;
 		        },
 			}
 		}
@@ -8107,164 +8101,183 @@ window.onload = function () {
 
 
 
-// var myChart = new Chart(ctx, {
-// 	type: 'line',
-//   	data: {
-// 		labels: ['VM 1.0.0', 'VM 1.0.1', 'VM 1.0.2', 'VM 1.0.3', 'VM 1.0.4', 'VM 1.1.0', 'VM 1.1.1', 'VM 1.1.2', 'VM 1.1.3', 'VM 1.1.4', 'VM 1.1.5'],
-// 		datasets: [
-// 			{ 
-// 				data: [
-// 					{
-// 				        x: 'VM 1.0.1',
-// 				        y: 1
-// 				    }, {
-// 				        x: 'VM 1.0.2',
-// 				        y: 1
-// 				    }, {
-// 				        x: 'VM 1.0.3',
-// 				        y: 1
-// 				    }
-// 			    ],
+var myChart = new Chart(ctx, {
+	type: 'line',
+  	data: {
+		labels: ['VM 1.0.0', 'VM 1.0.1', 'VM 1.0.2', 'VM 1.0.3', 'VM 1.0.4', 'VM 1.1.0', 'VM 1.1.1', 'VM 1.1.2', 'VM 1.1.3', 'VM 1.1.4', 'VM 1.1.5'],
+		datasets: [
+			{ 
+				data: [
+					{
+				        x: 'VM 1.0.1',
+				        y: 1
+				    }, {
+				        x: 'VM 1.0.2',
+				        y: 1
+				    }, {
+				        x: 'VM 1.0.3',
+				        y: 1
+				    },
+                    null,
+                    null,
+                    null,
+                    {
+                        x: 'VM 1.1.1',
+                        y: 1
+                    },
+                    {
+                        x: 'VM 1.1.2',
+                        y: 1
+                    }
 
-// 				label: "BUG 1",
-// 				borderColor: "#3e95cd",
-// 				backgroundColor: "#3e95cd",
-// 				hoverBackgroundColor: "lightgreen",
-// 				radius: 6,
-// 				hoverRadius: 10,
-// 				fill: false
-// 			}, 
+			    ],
 
-// 			{ 
-// 				data: [
-// 					{
-// 				        x: 'VM 1.0.1',
-// 				        y: 2
-// 				    }, {
-// 				        x: 'VM 1.0.2',
-// 				        y: 2
-// 				    }, {
-// 				        x: 'VM 1.0.4',
-// 				        y: 2
-// 				    }
-// 			    ],
-// 				label: "BUG 2",
-// 				borderColor: "#8e5ea2",
-// 				backgroundColor: "#8e5ea2",
-// 				radius: 6,
-// 				hoverRadius: 10,
-// 				fill: false
-// 			},
+				label: "BUG 1",
+				borderColor: "#3e95cd",
+				backgroundColor: "#3e95cd",
+				hoverBackgroundColor: "lightgreen",
+				radius: 6,
+				hoverRadius: 10,
+				fill: false
+			}, 
 
-// 			{ 
-// 				data: [
-// 					{
-// 				        x: 'VM 1.1.1',
-// 				        y: 2
-// 				    }, {
-// 				        x: 'VM 1.1.2',
-// 				        y: 2
-// 				    }, {
-// 				        x: 'VM 1.1.3',
-// 				        y: 2
-// 				    }, {
-// 				        x: 'VM 1.1.4',
-// 				        y: 2
-// 				    }
-// 			    ],
-// 				label: "BUG 2",
-// 				borderColor: "#8e5ea2",
-// 				backgroundColor: "#8e5ea2",
-// 				radius: 6,
-// 				hoverRadius: 10,
-// 				fill: false
-// 			},
-// 			{ 
-// 				data: [
-// 					{
-// 				        x: 'VM 1.0.4',
-// 				        y: 3
-// 				    }, {
-// 				        x: 'VM 1.1.0',
-// 				        y: 3
-// 				    }, {
-// 				        x: 'VM 1.1.1',
-// 				        y: 3
-// 				    }, {
-// 				        x: 'VM 1.1.2',
-// 				        y: 3
-// 				    }
-// 			    ],
-// 				label: "BUG 3",
-// 				borderColor: "#ff0016",
-// 				backgroundColor: "#ff0016",
-// 				radius: 6,
-// 				hoverRadius: 10,
-// 				fill: false
-// 			}
-// 		]
-// 	},
-// 	options: {
-// 		title: {
-// 			display: true,
-// 			text: `Analysing bug's statuses in Test Runs (JIRA Structure)`
-// 		},
-// 		scales: {
-// 			yAxes: [
-// 				{
-// 					ticks: {
-// 						min: 0,
-// 					    max: 4,
-// 					    stepSize: 1,
-// 					    suggestedMin: 0.5,
-// 					    suggestedMax: 5.5,
-// 					    callback: function(label, index, labels) {
-// 					        switch (label) {
-// 					            case 0:
-// 					                return 'ZERO';
-// 					            case 1:
-// 					                return 'BUG 1';
-// 					            case 2:
-// 					                return 'BUG 2';
-// 					            case 3:
-// 					                return 'BUG 3';
-// 					            case 4:
-// 					                return 'BUG 4';
-// 					            case 5:
-// 					                return 'BUG 5';
-// 					        }
-// 					    }
-// 					}
-// 				}
-// 			]
-// 		},
-// 		tooltips: {
-// 			bodyFontColor: "#000000", //#000000
-// 		    bodyFontSize: 20,
-// 		    bodyFontStyle: "bold",
-// 		    bodyFontColor: '#FFFFFF',
-// 		    bodyFontFamily: "'Helvetica', 'Arial', sans-serif",
-// 		    footerFontSize: 20,
-// 		    callbacks: {
-// 			    label: function(tooltipItem, data) {
-// 					var value = data.datasets[0].data[tooltipItem.index];
+			{ 
+				data: [
+					{
+				        x: 'VM 1.0.1',
+				        y: 2
+				    }, {
+				        x: 'VM 1.0.2',
+				        y: 2
+				    }, {
+				        x: 'VM 1.0.4',
+				        y: 2
+				    }
+			    ],
+				label: "BUG 2",
+				borderColor: "#8e5ea2",
+				backgroundColor: "#8e5ea2",
+				radius: 6,
+				hoverRadius: 10,
+				fill: false
+			},
 
-// 					var message = "my string"
+			{ 
+				data: [
+					{
+				        x: 'VM 1.1.1',
+				        y: 2
+				    }, {
+				        x: 'VM 1.1.2',
+				        y: 2
+				    }, {
+				        x: 'VM 1.1.3',
+				        y: 2
+				    }, {
+				        x: 'VM 1.1.4',
+				        y: 2
+				    },
+                    null,
+                    null,
+                    {
+                        x: 'VM 1.1.7',
+                        y: 2
+                    },
 
-// 					if(tooltipItem.index == 0) {
-// 						return message;
-// 					}
-// 					else if(tooltipItem.index == 1) {
-// 						return "<?php echo $data2;?>";
-// 					}
-// 					else if(tooltipItem.index == 2) {
-// 						return "<?php echo $data3;?>";
-// 					}
-// 					else {
-// 						return message;
-// 					}
-// 			    },
-// 			}
-// 		}
-// 	}
-// })
+			    ],
+				label: "BUG 2",
+				borderColor: "#8e5ea2",
+				backgroundColor: "#8e5ea2",
+				radius: 6,
+				hoverRadius: 10,
+				fill: false
+			},
+			{ 
+				data: [
+					{
+				        x: 'VM 1.0.4',
+				        y: 3
+				    }, {
+				        x: 'VM 1.1.0',
+				        y: 3
+				    }, {
+				        x: 'VM 1.1.1',
+				        y: 3
+				    }, {
+				        x: 'VM 1.1.2',
+				        y: 3
+				    }
+			    ],
+				label: "BUG 3",
+				borderColor: "#ff0016",
+				backgroundColor: "#ff0016",
+				radius: 6,
+				hoverRadius: 10,
+				fill: false
+			}
+		]
+	},
+	options: {
+		title: {
+			display: true,
+			text: `Analysing bug's statuses in Test Runs (JIRA Structure)`
+		},
+		scales: {
+			yAxes: [
+				{
+					ticks: {
+						min: 0,
+					    max: 4,
+					    stepSize: 1,
+					    suggestedMin: 0.5,
+					    suggestedMax: 5.5,
+					    callback: function(label, index, labels) {
+					        switch (label) {
+					            case 0:
+					                return 'ZERO';
+					            case 1:
+					                return 'BUG 1';
+					            case 2:
+					                return 'BUG 2';
+					            case 3:
+					                return 'BUG 3';
+					            case 4:
+					                return 'BUG 4';
+					            case 5:
+					                return 'BUG 5';
+					        }
+					    }
+					}
+				}
+			]
+		},
+		tooltips: {
+			bodyFontColor: "#000000", //#000000
+		    bodyFontSize: 20,
+		    bodyFontStyle: "bold",
+		    bodyFontColor: '#FFFFFF',
+		    bodyFontFamily: "'Helvetica', 'Arial', sans-serif",
+		    footerFontSize: 20,
+		    callbacks: {
+			    label: function(tooltipItem, data) {
+					var value = data.datasets[0].data[tooltipItem.index];
+
+					var message = "my string"
+
+					if(tooltipItem.index == 0) {
+						return message;
+					}
+					else if(tooltipItem.index == 1) {
+						return "<?php echo $data2;?>";
+					}
+					else if(tooltipItem.index == 2) {
+						return "<?php echo $data3;?>";
+					}
+					else {
+						return message;
+					}
+			    },
+			}
+		}
+	}
+})
