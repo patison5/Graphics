@@ -38,6 +38,129 @@ function getRandomColor() {
 var ctx = document.getElementById("myChart").getContext('2d');
 
 
+
+
+function drawGraph(data) {
+    if (true) {
+        // dataJSON = data;
+
+        var resultMass = []
+
+        for (let i = 0; i < dataJSON.BigData.length; i++) {
+
+            var data = [];
+            var color = getColor(dataJSON.BigData[i].issueProps.priorityId);
+
+            for (let j = 0; j < dataJSON.BigData[i].versions.length; j++) {
+                if (dataJSON.BigData[i].versions[j].visible) {
+                    data.push({
+                        x: dataJSON.BigData[i].versions[j].name,
+                        y: dataJSON.BigData[i].id,
+                        desc: "description of the bug",
+                        status: "status"
+                    })
+                } else {
+                    data.push({})
+                }
+            }
+
+            resultMass.push({
+                data: data,
+
+                label: dataJSON.BigData[i].bugName,
+                issueProps: dataJSON.BigData[i].issueProps,
+
+                borderColor: (dataJSON.BigData[i].issueProps.status === "Закрыт") ? "#000000d6" : color,
+                backgroundColor: color,
+                hoverBackgroundColor: color,
+                radius: 6,
+                hoverRadius: 10,
+                fill: false
+            })
+        }
+
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dataJSON.Labels,
+                datasets: resultMass
+            },
+            options: {
+                title: {
+                    display: true,
+                    fontSize: 25,
+                    text: `Analysing bug's statuses in Test Runs (JIRA Structure)`
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            min: 0,
+                            // max: 100,
+                            stepSize: 1,
+                            suggestedMin: 0.5,
+                            suggestedMax: 5.5,
+                            callback: function(label, index, labels) {
+                                if (label == 0) {
+                                    return 'SHIT'
+                                }
+                                return dataJSON.BigData[label - 1].bugName;
+                            }
+                        }
+                    }]
+                },
+                tooltips: {
+                    bodyFontColor: "#000000", //#000000
+                    bodyFontSize: 15,
+                    bodyFontStyle: "bold",
+                    bodyFontColor: '#FFFFFF',
+                    bodyFontFamily: "'Helvetica', 'Arial', sans-serif",
+                    footerFontSize: 20,
+
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            var value = data.datasets[0].data[tooltipItem.index];
+
+                            var message = ``;
+
+                            if (tooltipItem.index == 0) {
+                                return message;
+                            } else if (tooltipItem.index == 1) {
+                                return message;
+                            } else if (tooltipItem.index == 2) {
+                                return message;
+                            } else {
+                                return message;
+                            }
+                        },
+                        title: function(tooltipItems, data) {
+                            //Return value for title
+
+                            var title = data.datasets[tooltipItems[0].datasetIndex].issueProps.summary;
+
+                            return tooltipItems[0].xLabel + "  " + title;
+                        },
+                        afterLabel: function(tooltipItem, data) {
+
+                            console.log(data.datasets[tooltipItem.datasetIndex])
+
+                            var tooltipText =
+                                `Описание: \n${data.datasets[tooltipItem.datasetIndex].issueProps.description}
+                            \n\nСостояние: ${data.datasets[tooltipItem.datasetIndex].issueProps.issuetype}
+                            \nСтатус: ${data.datasets[tooltipItem.datasetIndex].issueProps.status}
+                            \nПриоритет: ${data.datasets[tooltipItem.datasetIndex].issueProps.priority}
+                            \nСоздатель: ${data.datasets[tooltipItem.datasetIndex].issueProps.creator}
+                            \nВыполняющий: ${data.datasets[tooltipItem.datasetIndex].issueProps.assignee}`
+
+                            return tooltipText;
+                        }
+                    }
+                }
+            }
+        })
+
+    }
+}
+
 function getDataFromServer() {
 
     // let data = {
@@ -51,122 +174,7 @@ function getDataFromServer() {
         console.log(data)
 
         if (data != null) {
-            dataJSON = data;
-
-            var resultMass = []
-
-            for (let i = 0; i < dataJSON.BigData.length; i++) {
-
-                var data = [];
-                var color = getColor(dataJSON.BigData[i].issueProps.priorityId);
-
-                for (let j = 0; j < dataJSON.BigData[i].versions.length; j++) {
-                    if (dataJSON.BigData[i].versions[j].visible) {
-                        data.push({
-                            x: dataJSON.BigData[i].versions[j].name,
-                            y: dataJSON.BigData[i].id,
-                            desc: "description of the bug",
-                            status: "status"
-                        })
-                    } else {
-                        data.push({})
-                    }
-                }
-
-                resultMass.push({
-                    data: data,
-
-                    label: dataJSON.BigData[i].bugName,
-                    issueProps: dataJSON.BigData[i].issueProps,
-
-                    borderColor: (dataJSON.BigData[i].issueProps.status === "Закрыт") ? "#000000d6" : color,
-                    backgroundColor: color,
-                    hoverBackgroundColor: color,
-                    radius: 6,
-                    hoverRadius: 10,
-                    fill: false
-                })
-            }
-
-            var myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: dataJSON.Labels,
-                    datasets: resultMass
-                },
-                options: {
-                    title: {
-                        display: true,
-                        fontSize: 25,
-                        text: `Analysing bug's statuses in Test Runs (JIRA Structure)`
-                    },
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                                // max: 100,
-                                stepSize: 1,
-                                suggestedMin: 0.5,
-                                suggestedMax: 5.5,
-                                callback: function(label, index, labels) {
-                                    if (label == 0) {
-                                        return 'SHIT'
-                                    }
-                                    return dataJSON.BigData[label - 1].bugName;
-                                }
-                            }
-                        }]
-                    },
-                    tooltips: {
-                        bodyFontColor: "#000000", //#000000
-                        bodyFontSize: 15,
-                        bodyFontStyle: "bold",
-                        bodyFontColor: '#FFFFFF',
-                        bodyFontFamily: "'Helvetica', 'Arial', sans-serif",
-                        footerFontSize: 20,
-
-                        callbacks: {
-                            label: function(tooltipItem, data) {
-                                var value = data.datasets[0].data[tooltipItem.index];
-
-                                var message = ``;
-
-                                if (tooltipItem.index == 0) {
-                                    return message;
-                                } else if (tooltipItem.index == 1) {
-                                    return message;
-                                } else if (tooltipItem.index == 2) {
-                                    return message;
-                                } else {
-                                    return message;
-                                }
-                            },
-                            title: function(tooltipItems, data) {
-                                //Return value for title
-
-                                var title = data.datasets[tooltipItems[0].datasetIndex].issueProps.summary;
-
-                                return tooltipItems[0].xLabel + "  " + title;
-                            },
-                            afterLabel: function(tooltipItem, data) {
-
-                                console.log(data.datasets[tooltipItem.datasetIndex])
-
-                                var tooltipText =
-                                    `Описание: \n${data.datasets[tooltipItem.datasetIndex].issueProps.description}
-								\n\nСостояние: ${data.datasets[tooltipItem.datasetIndex].issueProps.issuetype}
-								\nСтатус: ${data.datasets[tooltipItem.datasetIndex].issueProps.status}
-								\nПриоритет: ${data.datasets[tooltipItem.datasetIndex].issueProps.priority}
-								\nСоздатель: ${data.datasets[tooltipItem.datasetIndex].issueProps.creator}
-								\nВыполняющий: ${data.datasets[tooltipItem.datasetIndex].issueProps.assignee}`
-
-                                return tooltipText;
-                            }
-                        }
-                    }
-                }
-            })
-
+            drawGraph(data)
         } else {
             alert('data is not definded....')
         }
@@ -176,7 +184,12 @@ function getDataFromServer() {
 
 window.onload = function() {
     getDataFromServer()
+
+    drawGraph({})
 }
+
+
+
 
 
 
