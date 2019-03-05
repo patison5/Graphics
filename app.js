@@ -40,9 +40,8 @@ var ctx = document.getElementById("myChart").getContext('2d');
 
 
 
-function drawGraph(data) {
+function drawGraph(dataJSON) {
     if (true) {
-        // dataJSON = data;
 
         var resultMass = []
 
@@ -185,7 +184,9 @@ function getDataFromServer() {
 window.onload = function() {
     getDataFromServer()
 
-    drawGraph({})
+
+    //вот это мое для тестов.. будешь комитить для своих
+    drawGraph(dataJSON);
 }
 
 
