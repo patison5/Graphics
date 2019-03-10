@@ -1,4 +1,8 @@
-var dataJSON = {}
+var dataJSON = {};
+
+var _isHovered = false;
+var tmpData;
+var selectedIndex;
 
 function getColor(id) {
     id = parseInt(id);
@@ -24,6 +28,16 @@ function getColor(id) {
             return "#8adc74";
             break;
     }
+}
+
+function find_in_object(my_object, my_criteria){
+
+  return my_object.filter(function(obj) {
+    return Object.keys(my_criteria).every(function(c) {
+      return obj[c] == my_criteria[c];
+    });
+  });
+
 }
 
 function getRandomColor() {
@@ -59,7 +73,7 @@ function drawGraph(dataJSON) {
                         status: "status"
                     })
                 } else {
-                    data.push({})
+                    data.push(null)
                 }
             }
 
@@ -107,13 +121,76 @@ function drawGraph(dataJSON) {
                         }
                     }]
                 },
+                hover: {mode: null},
+                onHover: function(evt) {
+                    // console.log('hello')
+                    var item = myChart.getElementAtEvent(evt);
+                    
+                    // if (typeof(item) != undefined) {
+                    //     
+                    // }
+
+
+
+                    if ((item.length != 0) && (!_isHovered)) {
+                        _isHovered = true;
+                        var id = item[0]._datasetIndex;
+                        var element = myChart.data.datasets[id];
+
+                        // console.log(element.label)
+
+                        for (var i = 0; i < myChart.data.datasets.length; i++) {
+                            if (myChart.data.datasets[i].label === element.label) {
+                                // console.log("Finded: ", myChart.data.datasets[i])
+
+                                selectedIndex = i;
+
+                                tmpData = myChart.data.datasets[i].data;
+                                var tmpDataRes = [];
+
+                                for (var j = 0; j < myChart.data.datasets[i].data.length; j++) {
+                                    if (myChart.data.datasets[i].data[j] != null) {
+                                        tmpDataRes.push(myChart.data.datasets[i].data[j])
+                                    }
+                                }
+
+                                // console.log("resData: ", tmpDataRes)
+
+                                console.log(myChart.data.datasets[i])
+                                myChart.data.datasets[i].data = tmpDataRes;
+                                console.log(myChart.data.datasets[i])
+
+                                myChart.update();
+
+                                break;
+                            }
+                        }
+
+                    } else if ((item.length == 0) && (_isHovered)) {
+                        console.log("mouse out")
+                        myChart.data.datasets[selectedIndex].data = tmpData;
+                        myChart.update();
+                    }
+
+                    if ((item.length == 0))
+                        _isHovered = false;
+ 
+                },
+                legend: {
+                    display: true
+                },
+                animation: {
+                    easing: 'easeInSine'
+                },
                 tooltips: {
+                    // mode: 'index',
                     bodyFontColor: "#000000", //#000000
                     bodyFontSize: 15,
                     bodyFontStyle: "bold",
                     bodyFontColor: '#FFFFFF',
                     bodyFontFamily: "'Helvetica', 'Arial', sans-serif",
                     footerFontSize: 20,
+
 
                     callbacks: {
                         label: function(tooltipItem, data) {
@@ -140,7 +217,7 @@ function drawGraph(dataJSON) {
                         },
                         afterLabel: function(tooltipItem, data) {
 
-                            console.log(data.datasets[tooltipItem.datasetIndex])
+                            // console.log(data.datasets[tooltipItem.datasetIndex])
 
                             var tooltipText =
                                 `Описание: \n${data.datasets[tooltipItem.datasetIndex].issueProps.description}
@@ -163,7 +240,7 @@ function drawGraph(dataJSON) {
 function getDataFromServer() {
 
     // let data = {
-    // 	message: 'Hello, Roman! Please, send me json data of your bugs... =)'
+    //  message: 'Hello, Roman! Please, send me json data of your bugs... =)'
     // }
 
     $.ajax({
@@ -194,111 +271,9 @@ window.onload = function() {
 
 
 
+function changeData () {
+    console.log(myChart)
+}
 
-var labels = ['VM 1.0.0', 'VM 1.0.1', 'VM 1.0.2', 'VM 1.0.3', 'VM 1.0.4', 'VM 1.1.0', 'VM 1.1.1', 'VM 1.1.2', 'VM 1.1.3', 'VM 1.1.4', 'VM 1.1.5'];
+changeData();
 
-var dataSet = [{
-        data: [{},
-            {
-                x: 'VM 1.0.1',
-                y: 1
-            }, {
-                x: 'VM 1.0.2',
-                y: 1
-            }, {
-                x: 'VM 1.0.3',
-                y: 1
-            },
-            {},
-            {},
-            {
-                x: 'VM 1.1.1',
-                y: 1
-            },
-            {},
-            {
-                x: 'VM 1.1.3',
-                y: 1
-            }
-
-        ],
-
-        label: "BUG 1",
-        borderColor: "#3e95cd",
-        backgroundColor: "#3e95cd",
-        hoverBackgroundColor: "lightgreen",
-        radius: 6,
-        hoverRadius: 10,
-        fill: false
-    },
-
-    {
-        data: [{
-            x: 'VM 1.0.1',
-            y: 2
-        }, {
-            x: 'VM 1.0.2',
-            y: 2
-        }, {
-            x: 'VM 1.0.4',
-            y: 2
-        }],
-        label: "BUG 2",
-        borderColor: "#8e5ea2",
-        backgroundColor: "#8e5ea2",
-        radius: 6,
-        hoverRadius: 10,
-        fill: false
-    },
-
-    {
-        data: [{
-                x: 'VM 1.1.1',
-                y: 2
-            }, {
-                x: 'VM 1.1.2',
-                y: 2
-            }, {
-                x: 'VM 1.1.3',
-                y: 2
-            }, {
-                x: 'VM 1.1.4',
-                y: 2
-            },
-            null,
-            null,
-            {
-                x: 'VM 1.1.7',
-                y: 2
-            },
-
-        ],
-        label: "BUG 2",
-        borderColor: "#8e5ea2",
-        backgroundColor: "#8e5ea2",
-        radius: 6,
-        hoverRadius: 10,
-        fill: false
-    },
-    {
-        data: [{
-            x: 'VM 1.0.4',
-            y: 3
-        }, {
-            x: 'VM 1.1.0',
-            y: 3
-        }, {
-            x: 'VM 1.1.1',
-            y: 3
-        }, {
-            x: 'VM 1.1.2',
-            y: 3
-        }],
-        label: "BUG 3",
-        borderColor: "#ff0016",
-        backgroundColor: "#ff0016",
-        radius: 6,
-        hoverRadius: 10,
-        fill: false
-    }
-]
